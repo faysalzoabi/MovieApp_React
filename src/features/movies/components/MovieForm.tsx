@@ -10,6 +10,8 @@ import type Genre from "../../genres/models/Genre.model";
 import type MultipleSelectionDTO from "../../../components/MultipleSelection/MultipleSelectionDTO.model";
 import { useState } from "react";
 import type Theater from "../../theaters/models/Theater.model";
+import TypeAheadActors from "./TypeAheadActors";
+import type MovieActors from "../models/MovieActor.model";
 
 export default function MovieForm(props: MovieFormProps) {
 	const [nonSelectedGenres, setNonSelectedGenres] = useState(
@@ -27,6 +29,8 @@ export default function MovieForm(props: MovieFormProps) {
 	const [selectedTheaters, setSelectedTheaters] = useState(
 		toMultipleSelection(props.selectedTheaters),
 	);
+
+	const [selectedActors, setSelectedActors] = useState(props.selectedActors);
 
 	const {
 		register,
@@ -54,6 +58,7 @@ export default function MovieForm(props: MovieFormProps) {
 	const onSubmit: SubmitHandler<MovieCreation> = (data) => {
 		data.genresIds = selectedGenres.map((x) => x.key);
 		data.theatersIds = selectedTheaters.map((x) => x.key);
+		data.actors = selectedActors;
 		return props.onSubmit(data);
 	};
 
@@ -126,6 +131,28 @@ export default function MovieForm(props: MovieFormProps) {
 					/>
 				</div>
 
+				<div className="form-group">
+					<TypeAheadActors
+						actors={selectedActors}
+						onAdd={(actors) => {
+							setSelectedActors(actors);
+							setValue("actors", actors);
+						}}
+						onRemove={(actor) => {
+							const actors = selectedActors.filter((ca) => ca !== actor);
+							setSelectedActors(actors);
+							setValue("actors", actors);
+						}}
+						onCharacterChange={(id, character) => {
+							const index = selectedActors.findIndex((ca) => ca.id === id);
+							const actors = [...selectedActors];
+							actors[index].character = character;
+							setSelectedActors(actors);
+							setValue("actors", actors);
+						}}
+					/>
+				</div>
+
 				<div className="mt-4">
 					<Button type="submit" disabled={!isValid || isSubmitting}>
 						{isSubmitting ? "submitting..." : "submit"}
@@ -146,6 +173,7 @@ interface MovieFormProps {
 	selectedGenres: Genre[];
 	nonSelectedTheaters: Theater[];
 	selectedTheaters: Theater[];
+	selectedActors: MovieActors[];
 }
 
 const validationRules = yup.object({

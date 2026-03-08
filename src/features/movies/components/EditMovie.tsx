@@ -52,6 +52,7 @@ export default function EditMovie() {
 					selectedGenres={selectedGenres}
 					selectedTheaters={selectedTheaters}
 					nonSelectedTheaters={nonSelectedTheaters}
+					selectedActors={[]}
 				/>
 			) : (
 				<Loading />

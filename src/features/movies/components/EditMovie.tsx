@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import type { SubmitHandler } from "react-hook-form";
 import MovieForm from "./MovieForm";
 import Loading from "../../../components/Loading";
+import type Genre from "../../genres/models/Genre.model";
+import type Theater from "../../theaters/models/Theater.model";
 
 export default function EditMovie() {
 	const { id } = useParams();
@@ -28,10 +30,32 @@ export default function EditMovie() {
 		console.log(data);
 	};
 
+	const nonSelectedGenres: Genre[] = [{ id: 1, name: "Action" }];
+	const selectedGenres: Genre[] = [{ id: 2, name: "Drama" }];
+
+	const nonSelectedTheaters: Theater[] = [
+		{ id: 1, name: "Dubai", latitude: 0, longitude: 0 },
+	];
+
+	const selectedTheaters: Theater[] = [
+		{ id: 2, name: "Sharjah", latitude: 0, longitude: 0 },
+	];
+
 	return (
 		<div>
 			<h3>Edit Movie {id}</h3>
-			{model ? <MovieForm model={model} onSubmit={onSubmit} /> : <Loading />}
+			{model ? (
+				<MovieForm
+					model={model}
+					onSubmit={onSubmit}
+					nonSelectedGenres={nonSelectedGenres}
+					selectedGenres={selectedGenres}
+					selectedTheaters={selectedTheaters}
+					nonSelectedTheaters={nonSelectedTheaters}
+				/>
+			) : (
+				<Loading />
+			)}
 		</div>
 	);
 }

@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import type TheaterCreation from "../models/TheaterCreation";
+import type TheaterCreation from "../models/TheaterCreation.model";
 import { useEffect, useState } from "react";
 import TheaterForm from "./TheaterForm";
 import Loading from "../../../components/Loading";
@@ -11,7 +11,11 @@ export default function EditTheater() {
 
 	useEffect(() => {
 		const timeerId = setTimeout(() => {
-			setModel({ name: "Sambil " + id, latitude: 25.098222369997064, longitude: 55.19556999206544  });
+			setModel({
+				name: "Sambil " + id,
+				latitude: 25.098222369997064,
+				longitude: 55.19556999206544,
+			});
 		}, 1000);
 
 		return () => clearTimeout(timeerId);

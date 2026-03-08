@@ -1,6 +1,6 @@
 import * as yup from "yup";
 import firstLetterUppercase from "../../../validations/firstLetterUppercase";
-import type TheaterCreation from "../models/TheaterCreation";
+import type TheaterCreation from "../models/TheaterCreation.model";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import Button from "../../../components/Button";

@@ -2,16 +2,35 @@ import type MovieCreation from "../models/movie.model";
 import { type SubmitHandler } from "react-hook-form";
 
 import MovieForm from "./MovieForm";
+import type Genre from "../../genres/models/Genre.model";
+import type Theater from "../../theaters/models/Theater.model";
 
 export default function CreateMovie() {
 	const onSubmit: SubmitHandler<MovieCreation> = async (data) => {
 		await new Promise((resolve) => setTimeout(resolve, 2000));
 		console.log(data);
 	};
+
+	const nonSelectedGenres: Genre[] = [
+		{ id: 1, name: "Action" },
+		{ id: 2, name: "Drama" },
+	];
+
+	const nonSelectedTheaters: Theater[] = [
+		{ id: 1, name: "Dubai", latitude: 0, longitude: 0 },
+		{ id: 2, name: "Sharjah", latitude: 0, longitude: 0 },
+	];
+
 	return (
 		<>
 			<h3>Create Movies</h3>
-			<MovieForm onSubmit={onSubmit} />
+			<MovieForm
+				onSubmit={onSubmit}
+				nonSelectedGenres={nonSelectedGenres}
+				selectedGenres={[]}
+				nonSelectedTheaters={nonSelectedTheaters}
+				selectedTheaters={[]}
+			/>
 		</>
 	);
 }

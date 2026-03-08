@@ -6,8 +6,28 @@ import SelectImage from "../../../components/SelectImage/SelectImage";
 import Button from "../../../components/Button";
 import { NavLink } from "react-router";
 import MultipleSelection from "../../../components/MultipleSelection/MultipleSelection";
+import type Genre from "../../genres/models/Genre.model";
+import type MultipleSelectionDTO from "../../../components/MultipleSelection/MultipleSelectionDTO.model";
+import { useState } from "react";
+import type Theater from "../../theaters/models/Theater.model";
 
 export default function MovieForm(props: MovieFormProps) {
+	const [nonSelectedGenres, setNonSelectedGenres] = useState(
+		toMultipleSelection(props.nonSelectedGenres),
+	);
+
+	const [selectedGenres, setSelectedGenres] = useState(
+		toMultipleSelection(props.selectedGenres),
+	);
+
+	const [nonSelectedTheaters, setNonSelectedTheaters] = useState(
+		toMultipleSelection(props.nonSelectedTheaters),
+	);
+
+	const [selectedTheaters, setSelectedTheaters] = useState(
+		toMultipleSelection(props.selectedTheaters),
+	);
+
 	const {
 		register,
 		handleSubmit,
@@ -19,13 +39,27 @@ export default function MovieForm(props: MovieFormProps) {
 		defaultValues: props.model ?? { title: "" },
 	});
 
+	function toMultipleSelection(
+		array: { id: number; name: string }[],
+	): MultipleSelectionDTO[] {
+		return array.map((value) => {
+			return { key: value.id, description: value.name };
+		});
+	}
+
 	const currentImageUrl: string | undefined = props.model?.poster
 		? (props.model.poster as string)
 		: undefined;
 
+	const onSubmit: SubmitHandler<MovieCreation> = (data) => {
+		data.genresIds = selectedGenres.map((x) => x.key);
+		data.theatersIds = selectedTheaters.map((x) => x.key);
+		return props.onSubmit(data);
+	};
+
 	return (
 		<>
-			<form onSubmit={handleSubmit(props.onSubmit)}>
+			<form onSubmit={handleSubmit(onSubmit)}>
 				<div className="form-group">
 					<label htmlFor="title">Title</label>
 					<input
@@ -71,9 +105,24 @@ export default function MovieForm(props: MovieFormProps) {
 				<div className="form-group">
 					<label htmlFor="">Genres:</label>
 					<MultipleSelection
-						selected={[]}
-						nonSelected={[]}
-						onChange={() => {}}
+						selected={selectedGenres}
+						nonSelected={nonSelectedGenres}
+						onChange={(selected, nonSelected) => {
+							setSelectedGenres(selected);
+							setNonSelectedGenres(nonSelected);
+						}}
+					/>
+				</div>
+
+				<div className="form-group">
+					<label htmlFor="">Genres:</label>
+					<MultipleSelection
+						selected={selectedTheaters}
+						nonSelected={nonSelectedTheaters}
+						onChange={(selected, nonSelected) => {
+							setSelectedTheaters(selected);
+							setNonSelectedTheaters(nonSelected);
+						}}
 					/>
 				</div>
 
@@ -93,6 +142,10 @@ export default function MovieForm(props: MovieFormProps) {
 interface MovieFormProps {
 	model?: MovieCreation;
 	onSubmit: SubmitHandler<MovieCreation>;
+	nonSelectedGenres: Genre[];
+	selectedGenres: Genre[];
+	nonSelectedTheaters: Theater[];
+	selectedTheaters: Theater[];
 }
 
 const validationRules = yup.object({

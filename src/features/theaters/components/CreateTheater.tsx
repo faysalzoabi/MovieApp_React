@@ -1,6 +1,6 @@
 import type { SubmitHandler } from "react-hook-form";
 import TheaterForm from "./TheaterForm";
-import type TheaterCreation from "../models/TheaterCreation";
+import type TheaterCreation from "../models/TheaterCreation.model";
 
 export default function CreateTheater() {
 	const onSubmit: SubmitHandler<TheaterCreation> = async (data) => {

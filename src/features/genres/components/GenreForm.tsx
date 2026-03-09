@@ -6,6 +6,7 @@ import Button from "../../../components/Button";
 
 import * as yup from "yup";
 import firstLetterUppercase from "../../../validations/firstLetterUppercase";
+import DisplayErrors from "../../../components/DisplayErrors";
 
 export default function GenreForm(props: GenreFormProps) {
 	const {
@@ -18,33 +19,36 @@ export default function GenreForm(props: GenreFormProps) {
 		defaultValues: props.model ?? { name: "" },
 	});
 	return (
-		<form onSubmit={handleSubmit(props.onSubmit)}>
-			<div className="form-group">
-				<label htmlFor="name">Name</label>
-				<input
-					autoComplete="off"
-					className="form-control"
-					type="text"
-					{...register("name")}
-				/>
-				{errors.name && <p className="error">{errors.name.message}</p>}
-			</div>
-
-			<div className="mt-2">
-				<Button type="submit" disabled={!isValid || isSubmitting}>
-					{isSubmitting ? "Sending..." : "Send"}
-				</Button>
-				<NavLink className="btn btn-secondary ms-2" to="/genres">
-					Cancel
-				</NavLink>
-			</div>
-		</form>
+		<>
+			<DisplayErrors errors={props.errors} />
+			<form onSubmit={handleSubmit(props.onSubmit)}>
+				<div className="form-group">
+					<label htmlFor="name">Name</label>
+					<input
+						autoComplete="off"
+						className="form-control"
+						type="text"
+						{...register("name")}
+					/>
+					{errors.name && <p className="error">{errors.name.message}</p>}
+				</div>
+				<div className="mt-2">
+					<Button type="submit" disabled={!isValid || isSubmitting}>
+						{isSubmitting ? "Sending..." : "Send"}
+					</Button>
+					<NavLink className="btn btn-secondary ms-2" to="/genres">
+						Cancel
+					</NavLink>
+				</div>
+			</form>
+		</>
 	);
 }
 
 interface GenreFormProps {
 	onSubmit: SubmitHandler<CreateGenre>;
 	model?: CreateGenre;
+	errors: string[];
 }
 
 const validationRules = yup.object({
